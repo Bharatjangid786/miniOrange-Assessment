@@ -26,7 +26,6 @@ public class AuthController {
     @Autowired
     private AuthService AuthService;
 
-    // call this Api when user click for Otp to verify his/her email
     @PostMapping("/signUp")
      public ResponseEntity<String> signup(@RequestBody User signUpRequest){
         try {
@@ -59,16 +58,13 @@ public class AuthController {
                     .body(Map.of("error", "Missing or invalid Authorization header"));
         }
 
-        // Extract the token from the "Bearer <token>" format
         String token = authHeader.substring(7);
 
-        // Validate the JWT token
         if (!JwtUtils.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid or expired token"));
         }
 
-        // Extract email from token and return a success response
         String email = JwtUtils.extractEmail(token);
 
         return ResponseEntity.ok(Map.of(
